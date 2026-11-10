@@ -15,11 +15,11 @@ function framework() {
                 req.on("end", () => {
                     req.data = data;
                     for(const controller of controllers)
-                        if (req.url.startsWith('/'+controller.name)) {
-                            controller.func(req, res);
-                            success = true;
-                            break;
-                        }
+                    if (req.url.split("/")[1].split("?")[0] === controller.name) {
+                        controller.func(req, res);
+                        success = true;
+                        break;
+                    }
                     if (!success) {
                         res.writeHead(404);
                         res.write("No such controller found.");

@@ -1,4 +1,4 @@
-import framework from "../04/04d-framework.js";
+import framework from "./5a-framework.js";
 import {readFile, writeFile, unlink, statSync, rmdir} from "node:fs";
 let app = framework()
 app.get("sum", (req, res) => {

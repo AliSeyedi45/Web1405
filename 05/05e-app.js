@@ -101,18 +101,27 @@ app.get("createUser", (req, res) => {
             res.write("Error: " + err)
             res.end()
         } else {
-            let db = JSON.parse(data);
-            db.users.push(req.data)
-            writeFile("db.json", JSON.stringify(db), (err) => {
-                if (err) {
-                    res.writeHead(500)
-                    res.write("Error: " + err)
-                } else {
-                    res.writeHead(200)
-                    res.write("user created successfully")
-                }
+            try {
+                let db = JSON.parse(data);
+                let user = JSON.parse(req.data);
+
+                db.users.push(user);
+
+                writeFile("db.json", JSON.stringify(db), (err) => {
+                    if (err) {
+                        res.writeHead(500)
+                        res.write("Error: " + err)
+                    } else {
+                        res.writeHead(200)
+                        res.write("user created successfully")
+                    }
+                    res.end()
+                })
+            } catch (err) {
+                res.writeHead(400)
+                res.write("Invalid JSON data")
                 res.end()
-            })
+            }
         }
     })
 })

@@ -103,7 +103,7 @@ app.get("createUser", (req, res) => {
                 res.writeHead(200)
                 res.write("user created successfully")
             }
+            res.end()
         })
-        res.end()
 })
 app.listen(80, () => {})

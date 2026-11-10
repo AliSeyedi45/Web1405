@@ -97,16 +97,25 @@ app.get("delete", (req, res) => {
 app.get("createUser", (req, res) => {
     readFile("db.json",(err, data) => {
         if (!err) {
-            writeFile("db.json", data + req.data, (err) => {
-                if (err) {
-                    res.writeHead(500)
-                    res.write("Error: " + err)
-                } else {
-                    res.writeHead(200)
-                    res.write("user created successfully")
-                }
+            try {
+                let db = JSON.parse(data);
+                let user = JSON.parse(req.data);
+                db.users.push(user);
+                writeFile("db.json", JSON.stringify(db), (err) => {
+                    if (err) {
+                        res.writeHead(500)
+                        res.write("Error: " + err)
+                    } else {
+                        res.writeHead(200)
+                        res.write("user created successfully")
+                    }
+                    res.end()
+                })
+            } catch (err) {
+                res.writeHead(400)
+                res.write("Invalid JSON data")
                 res.end()
-            })
+            }
         } else {
             res.writeHead(500)
             res.write("Error: " + err)
