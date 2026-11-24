@@ -23,45 +23,29 @@ function framework(){
 
                     let found = false;
                     try {
+                        
                         request.data = JSON.parse(data);
-                    } catch (error) {
+                    }
+                    catch(e){
+                        
                         request.data = data;
                     }
-
-                    if (request.data === "" || request.data === null || typeof request.data !== 'object') {
-                        request.data = {};
-                    }
-
+                    
                     request.myKey = 'salam!';
+                    
                     for(let item of controllers){
-                        let prefix = '/' + item.name;
-                        if(request.url === prefix || request.url.startsWith(prefix + '/')){
+                        if(request.url.startsWith('/' + item.name)){
                             console.log("(framework) controller: ", item.name);
                             found = true;
-                            try {
-                                item.func(request, response);
-                            } catch (err) {
-                                console.log("(framework) controller error:", err);
-                                if (!response.headersSent) {
-                                    response.writeHead(500);
-                                    response.write("internal server error");
-                                }
-                                if (!response.writableEnded) {
-                                    response.end();
-                                }
-                            }
+                            item.func(request, response);
                             break;
                         }
                     }
+                    
                     if(!found){
                         console.log("path not found.");
-                        if (!response.headersSent) {
-                            response.writeHead(404);
-                            response.write("path not found");
-                        }
-                        if (!response.writableEnded) {
-                            response.end();
-                        }
+                        response.writeHead(404, { 'Content-Type': 'text/plain' });
+                        response.end("Path not found");
                     }
                 });
             }
